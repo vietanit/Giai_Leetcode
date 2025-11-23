@@ -1,0 +1,107 @@
+1262
+Đề bài: cho mảng số nguyên dương, tìm tổng lớn nhất của một số ptu sao cho tổng này chia hết cho 3.
+Lời giải: 
+
+Cách 1: Sử dụng DP + rolling array.
+Xét đến index i, gọi dp[j] là tổng lớn nhất có số dư khi chia cho 3 là j.
+Công thức: dp[i+1][(j+nums[i+1]%3]=max(dp[i+1][(j+nums[i+1])%3],dp[i][j]+nums[i+1]).
+Code:
+class Solution {
+public:
+    int maxSumDivThree(vector<int>& nums) {
+        vector<int> a={0,INT_MIN,INT_MIN};
+        for(int num:nums) {
+            vector<int> b=a;
+            for(int i=0;i<=2;i++) b[(i+num)%3]=max(b[(i+num)%3],a[i]+num);
+            a=b;
+        }
+        return a[0];
+    }
+};
+
+Cách 2: Math.
+Tìm 2 số nhỏ nhất có số dư khi chia cho 3 là 0,1,2 (nếu có).
+Phụ thuộc vào tổng các ptu của mảng tìm phần nhỏ nhất phải trừ đi.
+Code:
+class Solution {
+public:
+    int maxSumDivThree(vector<int>& nums) {
+        long long total_sum = 0;
+        
+        // r1 will store the smallest elements with remainder 1 (at most 2)
+        // r2 will store the smallest elements with remainder 2 (at most 2)
+        vector<int> r1, r2; 
+        
+        // --- Step 1: Calculate Total Sum and Track Smallest Remainders ---
+        for (int n : nums) {
+            total_sum += n;
+            
+            if (n % 3 == 1) {
+                r1.push_back(n);
+                // Keep r1 sorted and cap its size at 2
+                sort(r1.begin(), r1.end());
+                if (r1.size() > 2) {
+                    r1.pop_back(); // Discard the largest element
+                }
+            } else if (n % 3 == 2) {
+                r2.push_back(n);
+                // Keep r2 sorted and cap its size at 2
+                sort(r2.begin(), r2.end());
+                if (r2.size() > 2) {
+                    r2.pop_back(); // Discard the largest element
+                }
+            }
+        }
+        
+        int R = total_sum % 3;
+        
+        // --- Step 2: Handle the Initial Remainder R ---
+        if (R == 0) {
+            // Case 1: Sum is already divisible by 3
+            return (int)total_sum;
+        }
+
+        long long min_discard = LLONG_MAX;
+
+        if (R == 1) {
+            // Case 2: R=1. Need to discard X such that X % 3 = 1.
+            
+            // Option A: Discard smallest single number with remainder 1
+            if (!r1.empty()) {
+                min_discard = min(min_discard, (long long)r1[0]);
+            }
+            
+            // Option B: Discard two smallest numbers with remainder 2 (2 + 2 = 4, 4 % 3 = 1)
+            if (r2.size() >= 2) {
+                min_discard = min(min_discard, (long long)r2[0] + r2[1]);
+            }
+        } else { // R == 2
+            // Case 3: R=2. Need to discard X such that X % 3 = 2.
+            
+            // Option A: Discard smallest single number with remainder 2
+            if (!r2.empty()) {
+                min_discard = min(min_discard, (long long)r2[0]);
+            }
+            
+            // Option B: Discard two smallest numbers with remainder 1 (1 + 1 = 2)
+            if (r1.size() >= 2) {
+                min_discard = min(min_discard, (long long)r1[0] + r1[1]);
+            }
+        }
+        
+        // If min_discard is still LLONG_MAX, it means no solution was possible (which 
+        // shouldn't happen for the given constraints if total_sum > 0, but good practice).
+        // Since the problem asks for the maximum sum, and 0 is always an option 
+        // (by picking no numbers), we can safely subtract min_discard if it was updated.
+        if (min_discard != LLONG_MAX) {
+            return (int)(total_sum - min_discard);
+        }
+        
+        // If total_sum > 0 and we can't discard anything to make it divisible by 3, 
+        // the max sum is 0 (by picking nothing). Given the constraints, 
+        // we should always be able to find a discard if R != 0 and the array is not empty.
+        // However, the simple subtraction works if min_discard was updated.
+        // For simplicity and based on the logic:
+        return 0; // Should not be reached if total_sum is calculated correctly and a max sum > 0 exists.
+    }
+};
