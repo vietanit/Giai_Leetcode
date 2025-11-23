@@ -6,6 +6,6 @@ Ví dụ: tập I=[[1,3],[1,4],[2,5],[3,5]], sau khi sort được [[3,5],[2,5],
 Ban đầu chọn 2 điểm L=I[0,0}, R=I[0,0]+1.
 Sau đó duyệt từng interval (l,r) và cập nhật (L,R) (dùng lại). Cụ thể, có ba trường hợp:
   r>L: không cần thêm điểm. Giữ nguyên L,R.
-  r=L: thêm một điểm tại l. Cập nhật L=l, R=l.
+  L<=r<R: thêm một điểm tại l. Cập nhật L=l, R=l.
   r<L: thêm hai điểm. Cập nhật L=l, R=l+1. 
 Code: Bạn đọc tự code nhé :). Và nếu có sai sót ở đâu rất mong đc góp ý. Thank u <3. 
