@@ -2,10 +2,10 @@ Link: https://leetcode.com/problems/set-intersection-size-at-least-two/?envType=
 Giải thích đề bài: Cho mảng gồm các interval kích thước >=2, một tập hợp các giá trị thỏa mãn nếu với mỗi interval có ít nhất 2 giá trị trong tập hợp nằm trong nó. Tìm kích thước nhỏ nhất của tập hợp.
 Hướng giải: sort + greedy.
 Lời giải: sort các interval giảm dần điểm bắt đầu; nếu điểm bắt đầu bằng nhau thì sort theo điểm kết thúc tăng dần.
-Ví dụ: tập I=[[1,3],[1,4],[2,5],[3,5]], sau khi sort được [[3,5],[2,5],[1,4],[1,3]]
+Ví dụ: tập I=[[1,3],[1,4],[2,5],[3,5]], sau khi sort được [[3,5],[2,5],[1,3],[1,4]]
 Ban đầu chọn 2 điểm L=I[0,0}, R=I[0,0]+1.
 Sau đó duyệt từng interval (l,r) và cập nhật (L,R) (dùng lại). Cụ thể, có ba trường hợp:
-  l=L và r>R: không cần thêm điểm vì nó bao hàm interval trc đó. Giữ nguyên L,R.
-  l<L và r>=L: thêm một điểm tại l (do đã có một điểm tại L). Cập nhật L=l, r=L.
-  r<L: thêm hai điểm do không có giao. Cập nhật L=l,R=l+1.
+  r>L: không cần thêm điểm. Giữ nguyên L,R.
+  r=L: thêm một điểm tại l. Cập nhật L=l, R=l.
+  r<L: thêm hai điểm. Cập nhật L=l, R=l+1. 
 Code: Bạn đọc tự code nhé :). Và nếu có sai sót ở đâu rất mong đc góp ý. Thank u <3. 
